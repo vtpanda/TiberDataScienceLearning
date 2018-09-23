@@ -74,6 +74,7 @@ dot_data = tree.export_graphviz(clf, out_file=None,
 
 graph = graphviz.Source(dot_data)
 #had to do "brew install graphviz" to get the following statement to work
+#this was put one folder up; i manually put these files in the FirstLesson subfolder
 graph.render("Titanic")
 
 #predict values
