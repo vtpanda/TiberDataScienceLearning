@@ -30,7 +30,7 @@ df.ix[[2],]
 #got a deprecation warning
 df.ix[[2,4],['Survived','Name']]
 
-#same as above using label indexing
+#same as above using label indexing; no deprecation warning
 df.loc[[2,4], ['Survived','Name']]
 
 #same as above using positional indexing;
@@ -41,9 +41,9 @@ df.iloc[[2,4], [1,3]]
 df.loc[[2,4],]
 df.iloc[[2,4], ]
 
-#note that these don't seem to work; perhaps try a few more things
-df.loc[ , ['Survived','Name']]
-df.iloc[ , [1,3]]
+#okay; this works
+df.loc[ : , ['Survived','Name']]
+df.iloc[ : , [1,3]]
 #this does work however
 df[['Survived','Name']]
 
