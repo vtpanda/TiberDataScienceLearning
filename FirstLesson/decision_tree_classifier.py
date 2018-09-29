@@ -25,7 +25,8 @@ df = pd.read_csv('~/Documents/GitHub/TiberDataScienceLearning/Data/Titanic/train
 
 y = df[['Survived']]
 
-x = df[['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked']]
+#i'll use the correct columns at the time i need them
+x = df #df[['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked']]
 
 #just for testing
 #x[x['Embarked'].isna()]
@@ -35,9 +36,9 @@ x = df[['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked']]
 #x.loc[:,'Age']
 
 #turn missing ages into the mean age
-imputer = Imputer(missing_values = 'NaN', strategy = 'mean', axis = 0)
-imputer = imputer.fit(x.loc[:,['Age']])
-x.loc[:,'Age'] = imputer.transform(x.loc[:,['Age']])
+# imputer = Imputer(missing_values = 'NaN', strategy = 'mean', axis = 0)
+# imputer = imputer.fit(x.loc[:,['Age']])
+# x.loc[:,'Age'] = imputer.transform(x.loc[:,['Age']])
 
 #x.groupby('Embarked').count()
 
@@ -49,20 +50,44 @@ x.loc[:,'Age'] = imputer.transform(x.loc[:,['Age']])
 
 #found two ways of putting S into the NaN values for Embarked
 #x['Embarked'] = df.Embarked.replace(np.NaN, 'S')
-x.Embarked = x.Embarked.fillna('S')
+# x.Embarked = x.Embarked.fillna('S')
 #check to make sure that we did it correctly
 #x.loc[[61, 829], :]
 
 #encode string values
-labelencoder_X = LabelEncoder()
-x.loc[:,'Sex'] = labelencoder_X.fit_transform(x.loc[:,'Sex'])
-x.loc[:,'Embarked'] = labelencoder_X.fit_transform(x.loc[:,'Embarked'])
+# labelencoder_X = LabelEncoder()
+# x.loc[:,'Sex'] = labelencoder_X.fit_transform(x.loc[:,'Sex'])
 
+#don't want to have three values for this, rather we should turn this into two variables
+#x.loc[:,'Embarked'] = labelencoder_X.fit_transform(x.loc[:,'Embarked'])
+# factors = pd.get_dummies(x.loc[:,'Embarked'])
+# x['C'] = factors['C']
+# x['Q'] = factors['Q']
+# x['S'] = factors['S']
+# x = x.drop(columns= ['Embarked'])
 #is the following a better alternative?
 #df['Sex'] = df['Sex'].map({'male': 0, 'female': 1})
 
+#this is the final set of preprocessing that we're doing; I'm going to move this to do it on each set of data individually
+#actually, i take that back; let's turn this into a function; no reason to duplicate this code
+def preprocessdataframe (df):
+    imputer = Imputer(missing_values = 'NaN', strategy = 'mean', axis = 0)
+    imputer = imputer.fit(df.loc[:,['Age']])
+    df.loc[:,'Age'] = imputer.transform(df.loc[:,['Age']])
 
+    imputer = Imputer(missing_values = 'NaN', strategy = 'mean', axis = 0)
+    imputer = imputer.fit(df.loc[:,['Fare']])
+    df.loc[:,'Fare'] = imputer.transform(df.loc[:,['Fare']])
 
+    df.Embarked = df.Embarked.fillna('S')
+
+    labelencoder_X = LabelEncoder()
+    df.loc[:,'Sex'] = labelencoder_X.fit_transform(df.loc[:,'Sex'])
+    factors = pd.get_dummies(df.loc[:,'Embarked'])
+    df['C'] = factors['C']
+    df['Q'] = factors['Q']
+    df['S'] = factors['S']
+    return df
 
 
 #10-fold
@@ -76,8 +101,11 @@ for train_index, test_index in kf.split(x):
     cvv_x_train, cvv_x_test = x.iloc[train_index], x.iloc[test_index]
     cvv_y_train, cvv_y_test = y.iloc[train_index], y.iloc[test_index]
     #this is where I've left off; i guess i need to train each set and get the results, right?
-    clfkfold = clfkfold.fit(cvv_x_train, cvv_y_train)
-    cvv_y_predictions = clfkfold.predict(cvv_x_test)
+    cvv_x_train = preprocessdataframe(cvv_x_train)
+    cvv_x_test = preprocessdataframe(cvv_x_test)
+
+    clfkfold = clfkfold.fit(cvv_x_train[['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'C', 'Q', 'S']], cvv_y_train)
+    cvv_y_predictions = clfkfold.predict(cvv_x_test[['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'C', 'Q', 'S']])
     #confusion matrix
     cm = pd.DataFrame(
         confusion_matrix(cvv_y_test, cvv_y_predictions),
@@ -86,15 +114,18 @@ for train_index, test_index in kf.split(x):
     )
     print ("True Positive Rate: " , cm.loc['True Survival', 'Predicted Survival'] / (cm.loc['True Survival', 'Predicted Survival'] + cm.loc['True Survival', 'Predicted Not Survival']))
     print ("False Positive Rate: " , cm.loc['True Not Survival', 'Predicted Survival'] / (cm.loc['True Not Survival', 'Predicted Survival'] + cm.loc['True Not Survival', 'Predicted Not Survival']))
-    print("Overall Score:",  clfkfold.score(cvv_x_test, cvv_y_test))
+    print("Overall Score:",  clfkfold.score(cvv_x_test[['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'C', 'Q', 'S']], cvv_y_test))
     #print (cm)
 
 #split off 20%
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2, random_state = 0)
 
+x_train = preprocessdataframe(x_train)
+x_test = preprocessdataframe(x_test)
+
 #train decision tree (??)
 clf = tree.DecisionTreeClassifier()
-clf = clf.fit(x_train, y_train)
+clf = clf.fit(x_train[['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'C', 'Q', 'S']], y_train)
 
 
 #i would like to figure out how to programmatically get the list of columns names and pass them in here,
@@ -102,7 +133,7 @@ clf = clf.fit(x_train, y_train)
 #why did True work for class_names and not ['Survived']? need the names of the output categories
 #is it possible to turn the sex categories and embarked categories back to string for display purposes?
 dot_data = tree.export_graphviz(clf, out_file=None,
-                         feature_names=['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked'],
+                         feature_names=['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'C', 'Q', 'S'],
                          class_names=['Did not survive', 'Survived'],
                          filled=True, rounded=True,
                          special_characters=True)
@@ -110,7 +141,7 @@ dot_data = tree.export_graphviz(clf, out_file=None,
 graph = graphviz.Source(dot_data)
 #had to do "brew install graphviz" to get the following statement to work
 #this was put one folder up; i manually put these files in the FirstLesson subfolder
-graph.render("Titanic")
+graph.render("Titanic_Separate_Columns")
 
 #do 10-fold cross-validation;
 #this seems to score for both positive and negative rather than just for positive, so I'm not going to use it
@@ -118,11 +149,11 @@ graph.render("Titanic")
 #print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 
 #get my score of held out data
-myscore = clf.score(x_test, y_test) #looks roughly similar;
+myscore = clf.score(x_test[['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'C', 'Q', 'S']], y_test) #looks roughly similar;
 
 #predict values
-y_predictions = clf.predict(x_test)
-y_predictions_proba = clf.predict_proba(x_test)
+y_predictions = clf.predict(x_test[['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'C', 'Q', 'S']])
+y_predictions_proba = clf.predict_proba(x_test[['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'C', 'Q', 'S']])
 
 cm = pd.DataFrame(
     confusion_matrix(y_test, y_predictions),
@@ -132,7 +163,7 @@ cm = pd.DataFrame(
 
 print ("True Positive Rate: " , cm.loc['True Survival', 'Predicted Survival'] / (cm.loc['True Survival', 'Predicted Survival'] + cm.loc['True Survival', 'Predicted Not Survival']))
 print ("False Positive Rate: " , cm.loc['True Not Survival', 'Predicted Survival'] / (cm.loc['True Not Survival', 'Predicted Survival'] + cm.loc['True Not Survival', 'Predicted Not Survival']))
-print("Overall Score:",  clf.score(x_test, y_test))
+print("Overall Score:",  clf.score(x_test[['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'C', 'Q', 'S']], y_test))
 print (cm)
 
 fpr, tpr, thresholds = metrics.roc_curve(y_test, y_predictions)
@@ -150,3 +181,17 @@ plt.ylabel('True Positive Rate')
 plt.title('Receiver operating characteristic example')
 plt.legend(loc="lower right")
 plt.show()
+
+
+#this following if for creating the output file; I'll finish this later
+testx = pd.read_csv('~/Documents/GitHub/TiberDataScienceLearning/Data/Titanic/test.csv')
+
+
+
+testx = preprocessdataframe(testx)
+
+testpredictions = clf.predict(testx[['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'C', 'Q', 'S']])
+outputdata = DataFrame()
+outputdata['PassengerId'] = testx['PassengerId']
+outputdata['Survived'] = testpredictions
+outputdata.to_csv('~/Documents/GitHub/TiberDataScienceLearning/Data/Titanic/submission.csv')
