@@ -194,4 +194,4 @@ testpredictions = clf.predict(testx[['Pclass','Sex', 'Age', 'SibSp', 'Parch', 'F
 outputdata = DataFrame()
 outputdata['PassengerId'] = testx['PassengerId']
 outputdata['Survived'] = testpredictions
-outputdata.to_csv('~/Documents/GitHub/TiberDataScienceLearning/Data/Titanic/submission.csv')
+outputdata.to_csv('~/Documents/GitHub/TiberDataScienceLearning/Data/Titanic/submission.csv', columns=['PassengerId', 'Survived'], index=False)

@@ -6,6 +6,8 @@ Titanic: https://www.kaggle.com/c/titanic/data
 
 Telco: https://community.watsonanalytics.com/wp-content/uploads/2015/03/WA_Fn-UseC_-Telco-Customer-Churn.csv
 
+Update on 9/30/2018: Fixed issue with submission file
+
 Update on 9/29/2018: I've updated the decision_tree_classifier.py file to do preprocessing after splitting, and also to split the embarked field into three columns.  I'm also outputting a file for submission.
 
 The decision_tree_classifier.py file is the main file I'm working with to create and use the decision tree.
