@@ -78,5 +78,35 @@ cm = pd.DataFrame(
 
 score = model.score(x_test, y_test)
 
+fpr, tpr, thresholds = metrics.roc_curve(y_test, y_predictions)
+roc_auc = metrics.auc(fpr, tpr)
+
 cross_val_roc = cross_val_score(model, X=x_train, y=y_train, cv=10, scoring='roc_auc')
 cross_val_mean_roc_score = np.mean(cross_val_roc)
+
+
+#10-fold
+kf = KFold(n_splits=10)
+kf.get_n_splits(x)
+
+clfkfold = tree.DecisionTreeClassifier()
+
+for train_index, test_index in kf.split(x_train, y_train):
+    cvv_x_train, cvv_x_test = x_train.iloc[train_index], x_train.iloc[test_index]
+    cvv_y_train, cvv_y_test = y_train.iloc[train_index], y_train.iloc[test_index]
+
+    # cvv_x_train = preprocessdataframe(cvv_x_train)
+    # cvv_x_test = preprocessdataframe(cvv_x_test)
+
+    clfkfold = clfkfold.fit(cvv_x_train, cvv_y_train)
+    cvv_y_predictions = clfkfold.predict(cvv_x_test)
+
+    cvv_cm = pd.DataFrame(
+        confusion_matrix(cvv_y_test, cvv_y_predictions),
+        columns=['Predicted Not Survival', 'Predicted Survival'],
+        index=['True Not Survival', 'True Survival']
+    )
+    cvv_score = clfkfold.score(cvv_x_test, cvv_y_test)
+
+    cvv_fpr, cvv_tpr, thresholds = metrics.roc_curve(cvv_y_test, cvv_y_predictions)
+    cvv_roc_auc = metrics.auc(cvv_fpr, cvv_tpr)

@@ -6,6 +6,8 @@ Titanic: https://www.kaggle.com/c/titanic/data
 
 Telco: https://community.watsonanalytics.com/wp-content/uploads/2015/03/WA_Fn-UseC_-Telco-Customer-Churn.csv
 
+Update on 10/16/2018: Added a cleaned up version of my decision_tree_classifier.py script that I'll want to add some stuff to for improvement's sake.  Also added a first version of the second week's script.
+
 Update #3: Okay, I'm now using median, but looking at the distribution of values for Age, there's very little difference between using mean and median; that said, I might as well keep that code around for future problems.  Also, I used Rachel's code as a pointer to get counts by Age, and I exported that data to Excel to view in graph form.  Next thing to learn is how to create graphs in Python so I don't have to export to Excel.  Also, at some point, I want to figure out how to create normalized values for Age as a code exercise.
 
 Update #2: Okay, I figured out why I didn't get any deprecation warnings from using Imputer; I was using scikit-learn version 0.19.  I upgraded to scikit-learn 0.20.  I'm now using SimpleImputer
