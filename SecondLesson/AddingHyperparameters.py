@@ -53,7 +53,7 @@ aucs = dict()
 params = [.01, .05, .1, .2, .5]
 for i in params:
     clf_min_samples_split = tree.DecisionTreeClassifier(min_samples_split = i)
-    cross_val_roc = cross_val_score(clf_basic, X=x_train, y=y_train, cv=10, scoring='roc_auc')
+    cross_val_roc = cross_val_score(clf_min_samples_split, X=x_train, y=y_train, cv=10, scoring='roc_auc')
     roc_score = np.mean(cross_val_roc)
     aucs[i] = roc_score
 print("Using the min_samples_split hyperparameter: ", aucs)
@@ -61,16 +61,16 @@ print("Using the min_samples_split hyperparameter: ", aucs)
 aucs = dict()
 params = [.01, .05, .1, .2, .5]
 for i in params:
-    clf_min_samples_split = tree.DecisionTreeClassifier(min_samples_leaf = i)
-    cross_val_roc = cross_val_score(clf_basic, X=x_train, y=y_train, cv=10, scoring='roc_auc')
+    clf_min_samples_leaf = tree.DecisionTreeClassifier(min_samples_leaf = i)
+    cross_val_roc = cross_val_score(clf_min_samples_leaf, X=x_train, y=y_train, cv=10, scoring='roc_auc')
     roc_score = np.mean(cross_val_roc)
     aucs[i] = roc_score
 print("Using the min_samples_leaf hyperparameter: ", aucs)
 
 aucs = dict()
 for i in range(1,8):
-    clf_maxdepth = tree.DecisionTreeClassifier(max_features=i)
-    cross_val_roc = cross_val_score(clf_maxdepth, x_train, y_train, cv=10, scoring='roc_auc')
+    clf_maxfeatures = tree.DecisionTreeClassifier(max_features=i)
+    cross_val_roc = cross_val_score(clf_maxfeatures, x_train, y_train, cv=10, scoring='roc_auc')
     roc_score = np.mean(cross_val_roc)
     aucs[i] = roc_score
 print("Using the max_features hyperparameter: ", aucs)
@@ -78,8 +78,8 @@ print("Using the max_features hyperparameter: ", aucs)
 aucs = dict()
 params = [.001, .0001, .01, .05, .1, .2, .5]
 for i in params:
-    clf_min_samples_split = tree.DecisionTreeClassifier(min_impurity_decrease = i)
-    cross_val_roc = cross_val_score(clf_basic, X=x_train, y=y_train, cv=10, scoring='roc_auc')
+    clf_min_impurity_decrease = tree.DecisionTreeClassifier(min_impurity_decrease = i)
+    cross_val_roc = cross_val_score(clf_min_impurity_decrease, X=x_train, y=y_train, cv=10, scoring='roc_auc')
     roc_score = np.mean(cross_val_roc)
     aucs[i] = roc_score
 print("Using the min_impurity_decrease hyperparameter: ", aucs)

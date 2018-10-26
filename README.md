@@ -6,6 +6,8 @@ Titanic: https://www.kaggle.com/c/titanic/data
 
 Telco: https://community.watsonanalytics.com/wp-content/uploads/2015/03/WA_Fn-UseC_-Telco-Customer-Churn.csv
 
+10/26/2018: Fixed some bugs.  Some of the other parameters are actually good, too.  Now to try some combinations.
+
 10/25/2018: Tried a whole bunch of parameters.  The max_depth one seems to be the best one so far.  Perhaps some combination should be used.
 
 Update on 10/18/2018: Tested different depths.
