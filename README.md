@@ -6,6 +6,8 @@ Titanic: https://www.kaggle.com/c/titanic/data
 
 Telco: https://community.watsonanalytics.com/wp-content/uploads/2015/03/WA_Fn-UseC_-Telco-Customer-Churn.csv
 
+10/25/2018: Tried a whole bunch of parameters.  The max_depth one seems to be the best one so far.  Perhaps some combination should be used.
+
 Update on 10/18/2018: Tested different depths.
 
 Update on 10/16/2018: Added a cleaned up version of my decision_tree_classifier.py script that I'll want to add some stuff to for improvement's sake.  Also added a first version of the second week's script.
