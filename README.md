@@ -1,10 +1,10 @@
 # TiberDataScienceLearning
 
-The data sets are found at:
+The data set can be found at:
 
 Titanic: https://www.kaggle.com/c/titanic/data
 
-Telco: https://community.watsonanalytics.com/wp-content/uploads/2015/03/WA_Fn-UseC_-Telco-Customer-Churn.csv
+11/1/2018: Added GridSearchCV and RandomizedSearchCV to find the best parameters.  GridSearchCV was much slower, but also better.
 
 10/26/2018: Fixed some bugs.  Some of the other parameters are actually good, too.  Now to try some combinations.
 
