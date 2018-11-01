@@ -55,6 +55,7 @@ for i in range(1,12):
 print("Using the max_depth hyperparameter: ", aucs)
 #output: Using the max_depth hyperparameter:  {1: 0.7652214280121256, 2: 0.8065079085427922, 3: 0.8418283751132588, 4: 0.8427579714643668, 5: 0.8424975810150229, 6: 0.8231955490676419, 7: 0.802657108180364, 8: 0.80016373591955, 9: 0.793288190599237, 10: 0.7831202039777623, 11: 0.7548523720035347}
 
+#test out min_samples_split parameter with values of [.01, .05, .1, .2, .5]
 aucs = dict()
 params = [.01, .05, .1, .2, .5]
 for i in params:
@@ -65,6 +66,7 @@ for i in params:
 print("Using the min_samples_split hyperparameter: ", aucs)
 #output: Using the min_samples_split hyperparameter:  {0.01: 0.789461929650883, 0.05: 0.8164925836437463, 0.1: 0.8302917044196114, 0.2: 0.8400290627761556, 0.5: 0.804992337550477}
 
+#test out min_samples_leaf parameter with values of [.01, .05, .1, .2, .5]
 aucs = dict()
 params = [.01, .05, .1, .2, .5]
 for i in params:
@@ -76,6 +78,7 @@ print("Using the min_samples_leaf hyperparameter: ", aucs)
 #output: Using the min_samples_leaf hyperparameter:  {0.01: 0.8264754410103248, 0.05: 0.8296723463874626, 0.1: 0.8305953709296732, 0.2: 0.7927730726422586, 0.5: 0.5233987158405763}
 
 
+#test out max_features parameter with values of 1 to 8
 aucs = dict()
 for i in range(1,8):
     clf = tree.DecisionTreeClassifier(max_features=i)
@@ -85,7 +88,7 @@ for i in range(1,8):
 print("Using the max_features hyperparameter: ", aucs)
 #output: Using the max_features hyperparameter:  {1: 0.7391151968186852, 2: 0.7358194696130742, 3: 0.7374462020537602, 4: 0.7392733746658164, 5: 0.7444237502377037, 6: 0.7732762984216472, 7: 0.7447708326342048}
 
-
+#test out min_impurity_decrease parameter with values of [.001, .0001, .01, .05, .1, .2, .5]
 aucs = dict()
 params = [.001, .0001, .01, .05, .1, .2, .5]
 for i in params:
