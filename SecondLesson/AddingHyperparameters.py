@@ -90,7 +90,7 @@ print("Using the max_features hyperparameter: ", aucs)
 
 #test out min_impurity_decrease parameter with values of [.001, .0001, .01, .05, .1, .2, .5]
 aucs = dict()
-params = [.001, .0001, .01, .05, .1, .2, .5]
+params = [.0001, .001, .01, .05, .1, .2, .5]
 for i in params:
     clf = tree.DecisionTreeClassifier(min_impurity_decrease = i)
     cross_val_roc = cross_val_score(clf, X=x_train, y=y_train, cv=10, scoring='roc_auc')

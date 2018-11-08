@@ -4,6 +4,13 @@ The data set can be found at:
 
 Titanic: https://www.kaggle.com/c/titanic/data
 
+11/8/2018: Made minor corrections to week 1 and week 2 python scripts, and added jupyter notebook for week 2.  Additionally, added jupyter notebook with base code for week 3 that I will add to for the actual assignment.  
+
+Things left to do:
+  Actually do the week three assignment.
+  Add roc curve graph to the week 2 hyperparameter assignment, both in the .py script and in the jupyter notebook.
+  In the cleaned up version from week 1, fix the k-folds to use metrics.roc_auc_score instead of metrics.auc and possibly add the roc curve graph.
+
 11/1/2018: Added GridSearchCV and RandomizedSearchCV to find the best parameters.  GridSearchCV was much slower, but also better.
 
 10/26/2018: Fixed some bugs.  Some of the other parameters are actually good, too.  Now to try some combinations.

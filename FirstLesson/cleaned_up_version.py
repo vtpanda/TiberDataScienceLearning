@@ -40,11 +40,11 @@ def showdecisiontree(model):
     graph.render("Titanic_Decision_Tree")
     return True
 
-def showroccurve(fpr, tpr, roc_auc):
+def showroccurve(fpr, tpr, roc_auc, label):
     plt.figure()
     lw = 2
     plt.plot(fpr, tpr, color='darkorange',
-             lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
+             lw=lw, label='ROC curve - {0} (area = {1:0.2f})'.format(label, roc_auc))
     plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
@@ -54,6 +54,20 @@ def showroccurve(fpr, tpr, roc_auc):
     plt.legend(loc="lower right")
     plt.show()
 
+def showmultiroccurve(params): #this should be a list of dictionaries of fpr, tpr, and roc_auc
+    plt.figure()
+    lw = 2
+    for param in params:
+        plt.plot(param["fpr"], param["tpr"], color='darkorange',
+             lw=lw, label='ROC curve - {0} (area = {1:0.2f})'.format(param["label"],param["roc_auc"]))
+    plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver operating characteristic example')
+    plt.legend(loc="lower right")
+    plt.show()
 
 df = pd.read_csv('~/Documents/GitHub/TiberDataScienceLearning/Data/Titanic/train.csv')
 y = df[['Survived']]
@@ -79,7 +93,11 @@ cm = pd.DataFrame(
 score = model.score(x_test, y_test)
 
 fpr, tpr, thresholds = metrics.roc_curve(y_test, y_predictions)
-roc_auc = metrics.auc(fpr, tpr)
+roc_auc = metrics.roc_auc_score(y_test, y_predictions)
+label = 'No Hyperparameters'
+#the following was what I originally had, but I pulled the above from Rachael's code because it's betters
+#roc_auc2 = metrics.auc(fpr, tpr)
+showroccurve(fpr, tpr, roc_auc, label)
 
 cross_val_roc = cross_val_score(model, X=x_train, y=y_train, cv=10, scoring='roc_auc')
 cross_val_mean_roc_score = np.mean(cross_val_roc)
