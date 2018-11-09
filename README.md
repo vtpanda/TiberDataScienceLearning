@@ -4,6 +4,8 @@ The data set can be found at:
 
 Titanic: https://www.kaggle.com/c/titanic/data
 
+11/8/2018 take 2: Added a bunch of other models to the week 3 work.  I haven't gotten to XGBoost yet.
+
 11/8/2018: Made minor corrections to week 1 and week 2 python scripts, and added jupyter notebook for week 2.  Additionally, added jupyter notebook with base code for week 3 that I will add to for the actual assignment.  
 
 Things left to do:
