@@ -28,16 +28,14 @@ def preprocessdataframe (df):
 
     return df
 
-def showdecisiontree(model):
+def showdecisiontree(model, feature_names, name):
     dot_data = tree.export_graphviz(model, out_file=None,
-         feature_names=['Age', 'SibSp', 'Parch', 'Fare', 'Embarked_C', 'Embarked_Q',
-            'Embarked_S', 'Pclass_1', 'Pclass_2', 'Pclass_3', 'Sex_female',
-            'Sex_male'],
+         feature_names=feature_names,
          class_names=['Did not survive', 'Survived'],
          filled=True, rounded=True,
          special_characters=True)
     graph = graphviz.Source(dot_data)
-    graph.render("Titanic_Decision_Tree")
+    graph.render(name)
     return True
 
 def showroccurve(fpr, tpr, roc_auc, label):
@@ -81,6 +79,8 @@ x_test = preprocessdataframe(x_test)
 
 clf = tree.DecisionTreeClassifier()
 model = clf.fit(x_train, y_train)
+
+showdecisiontree(model, x_train.columns, "Documents/GitHub/TiberDataScienceLearning/FirstLesson/TitanicDecisionTree")
 y_predictions = model.predict(x_test)
 y_predictions_proba = model.predict_proba(x_test)
 
