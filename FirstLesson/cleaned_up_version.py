@@ -52,7 +52,7 @@ def showroccurve(fpr, tpr, roc_auc, label):
     plt.legend(loc="lower right")
     plt.show()
 
-def showmultiroccurve(params): #this should be a list of dictionaries of fpr, tpr, and roc_auc
+def showmultiroccurve(params): #this should be a list of dictionaries of fpr, tpr, roc_auc, and label
     plt.figure()
     lw = 2
     for param in params:
@@ -95,19 +95,26 @@ score = model.score(x_test, y_test)
 fpr, tpr, thresholds = metrics.roc_curve(y_test, y_predictions)
 roc_auc = metrics.roc_auc_score(y_test, y_predictions)
 label = 'No Hyperparameters'
-#the following was what I originally had, but I pulled the above from Rachael's code because it's betters
+#the following was what I originally had, but I pulled the above from Rachael's code because it's better
 #roc_auc2 = metrics.auc(fpr, tpr)
 showroccurve(fpr, tpr, roc_auc, label)
 
-cross_val_roc = cross_val_score(model, X=x_train, y=y_train, cv=10, scoring='roc_auc')
+##### what do we do with this to be able to use fpr and tpr?
+clf = tree.DecisionTreeClassifier()
+cross_val_roc = cross_val_score(clf, X=x_train, y=y_train, cv=10, scoring='roc_auc')
 cross_val_mean_roc_score = np.mean(cross_val_roc)
-
+#######
 
 #10-fold
-kf = KFold(n_splits=10)
-kf.get_n_splits(x)
+
+
+fprs = []
+tprs = []
+rocs = []
 
 clfkfold = tree.DecisionTreeClassifier()
+kf = KFold(n_splits=10)
+kf.get_n_splits(x)
 
 for train_index, test_index in kf.split(x_train, y_train):
     cvv_x_train, cvv_x_test = x_train.iloc[train_index], x_train.iloc[test_index]
@@ -127,4 +134,13 @@ for train_index, test_index in kf.split(x_train, y_train):
     cvv_score = clfkfold.score(cvv_x_test, cvv_y_test)
 
     cvv_fpr, cvv_tpr, thresholds = metrics.roc_curve(cvv_y_test, cvv_y_predictions)
-    cvv_roc_auc = metrics.auc(cvv_fpr, cvv_tpr)
+    cvv_roc_auc = metrics.roc_auc_score(cvv_y_test, cvv_y_predictions)
+
+    fprs.append(cvv_fpr)
+    tprs.append(cvv_tpr)
+    rocs.append(cvv_roc_auc)
+
+avgfpr = np.mean(fprs)
+avgtpr = np.mean(tprs)
+avgroc = np.mean(rocs)
+#avgroc here is generall a couple percentage points less than cross_val_mean_roc_score from above.... I'm not sure why this would be the case
