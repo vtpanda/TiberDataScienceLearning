@@ -144,3 +144,5 @@ avgfpr = np.mean(fprs)
 avgtpr = np.mean(tprs)
 avgroc = np.mean(rocs)
 #avgroc here is generall a couple percentage points less than cross_val_mean_roc_score from above.... I'm not sure why this would be the case
+label = "Using KFolds"
+showroccurve(avgfpr, avgtpr, avgroc, label)
