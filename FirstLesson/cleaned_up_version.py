@@ -12,6 +12,7 @@ from sklearn.model_selection import KFold
 import graphviz
 import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_score
+import array
 
 def preprocessdataframe (df):
     imputer = SimpleImputer(missing_values = np.nan, strategy = 'mean')
@@ -95,6 +96,7 @@ score = model.score(x_test, y_test)
 fpr, tpr, thresholds = metrics.roc_curve(y_test, y_predictions)
 roc_auc = metrics.roc_auc_score(y_test, y_predictions)
 label = 'No Hyperparameters'
+roc_auc # = 0.7488142292490119
 #the following was what I originally had, but I pulled the above from Rachael's code because it's better
 #roc_auc2 = metrics.auc(fpr, tpr)
 showroccurve(fpr, tpr, roc_auc, label)
@@ -103,6 +105,7 @@ showroccurve(fpr, tpr, roc_auc, label)
 clf = tree.DecisionTreeClassifier()
 cross_val_roc = cross_val_score(clf, X=x_train, y=y_train, cv=10, scoring='roc_auc')
 cross_val_mean_roc_score = np.mean(cross_val_roc)
+cross_val_mean_roc_score # = 0.7603877926552346
 #######
 
 #10-fold
@@ -114,14 +117,13 @@ rocs = []
 
 clfkfold = tree.DecisionTreeClassifier()
 kf = KFold(n_splits=10)
-kf.get_n_splits(x)
 
-for train_index, test_index in kf.split(x_train, y_train):
+for train_index, test_index in kf.split(x_train):
+    clfkfold = tree.DecisionTreeClassifier()
+
     cvv_x_train, cvv_x_test = x_train.iloc[train_index], x_train.iloc[test_index]
     cvv_y_train, cvv_y_test = y_train.iloc[train_index], y_train.iloc[test_index]
 
-    # cvv_x_train = preprocessdataframe(cvv_x_train)
-    # cvv_x_test = preprocessdataframe(cvv_x_test)
 
     clfkfold = clfkfold.fit(cvv_x_train, cvv_y_train)
     cvv_y_predictions = clfkfold.predict(cvv_x_test)
@@ -136,13 +138,14 @@ for train_index, test_index in kf.split(x_train, y_train):
     cvv_fpr, cvv_tpr, thresholds = metrics.roc_curve(cvv_y_test, cvv_y_predictions)
     cvv_roc_auc = metrics.roc_auc_score(cvv_y_test, cvv_y_predictions)
 
-    fprs.append(cvv_fpr)
-    tprs.append(cvv_tpr)
+    fprs.append(cvv_fpr[1])
+    tprs.append(cvv_tpr[1])
     rocs.append(cvv_roc_auc)
 
-avgfpr = np.mean(fprs)
-avgtpr = np.mean(tprs)
+avgfpr = array.array('f', [0.0, np.mean(fprs), 1])
+avgtpr = array.array('f', [0.0, np.mean(tprs), 1])
 avgroc = np.mean(rocs)
+avgroc # =  0.7427355886116913
 #avgroc here is generall a couple percentage points less than cross_val_mean_roc_score from above.... I'm not sure why this would be the case
 label = "Using KFolds"
 showroccurve(avgfpr, avgtpr, avgroc, label)
