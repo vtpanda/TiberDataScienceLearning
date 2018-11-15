@@ -81,7 +81,7 @@ x_test = preprocessdataframe(x_test)
 clf = tree.DecisionTreeClassifier()
 model = clf.fit(x_train, y_train)
 
-showdecisiontree(model, x_train.columns, "Documents/GitHub/TiberDataScienceLearning/FirstLesson/TitanicDecisionTree")
+#showdecisiontree(model, x_train.columns, "Documents/GitHub/TiberDataScienceLearning/FirstLesson/TitanicDecisionTree")
 y_predictions = model.predict(x_test)
 y_predictions_proba = model.predict_proba(x_test)
 
