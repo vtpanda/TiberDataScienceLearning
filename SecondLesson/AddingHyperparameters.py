@@ -25,7 +25,44 @@ def preprocessdataframe (df):
 
     return df
 
+    def showdecisiontree(model, feature_names, name):
+        dot_data = tree.export_graphviz(model, out_file=None,
+             feature_names=feature_names,
+             class_names=['Did not survive', 'Survived'],
+             filled=True, rounded=True,
+             special_characters=True)
+        graph = graphviz.Source(dot_data)
+        graph.render(name)
+        return True
 
+    def showroccurve(fpr, tpr, roc_auc, label):
+        plt.figure()
+        lw = 2
+        plt.plot(fpr, tpr, color='darkorange',
+                 lw=lw, label='ROC curve - {0} (area = {1:0.2f})'.format(label, roc_auc))
+        plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('Receiver operating characteristic example')
+        plt.legend(loc="lower right")
+        plt.show()
+
+    def showmultiroccurve(params): #this should be a list of dictionaries of fpr, tpr, roc_auc, and label
+        plt.figure()
+        lw = 2
+        for param in params:
+            plt.plot(param["fpr"], param["tpr"], color='darkorange',
+                 lw=lw, label='ROC curve - {0} (area = {1:0.2f})'.format(param["label"],param["roc_auc"]))
+        plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('Receiver operating characteristic example')
+        plt.legend(loc="lower right")
+        plt.show()
 
 
 df = pd.read_csv('~/Documents/GitHub/TiberDataScienceLearning/Data/Titanic/train.csv')
