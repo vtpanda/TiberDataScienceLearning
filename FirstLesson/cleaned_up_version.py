@@ -102,21 +102,25 @@ roc_auc # = 0.7488142292490119
 showroccurve(fpr, tpr, roc_auc, label)
 
 ##### what do we do with this to be able to use fpr and tpr?
+seed = 1005
+np.random.seed(seed)
 clf = tree.DecisionTreeClassifier()
-cross_val_roc = cross_val_score(clf, X=x_train, y=y_train, cv=10, scoring='roc_auc')
+kf = StratifiedKFold(n_splits=10) #, shuffle=True, random_state=seed
+cross_val_roc = cross_val_score(clf, X=x_train, y=y_train, cv=kf, scoring='roc_auc')
 cross_val_mean_roc_score = np.mean(cross_val_roc)
 cross_val_mean_roc_score # = 0.7603877926552346
 #######
 
 #10-fold
 
-
+seed = 1005
+np.random.seed(seed)
 fprs = []
 tprs = []
 rocs = []
 
 clfkfold = tree.DecisionTreeClassifier()
-kf = KFold(n_splits=10)
+kf = StratifiedKFold(n_splits=10) #, shuffle=True, random_state=seed
 
 for train_index, test_index in kf.split(x_train):
     clfkfold = tree.DecisionTreeClassifier()
