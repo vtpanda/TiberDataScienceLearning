@@ -53,11 +53,11 @@ def showroccurve(fpr, tpr, roc_auc, label):
     plt.legend(loc="lower right")
     plt.show()
 
-def showmultiroccurve(params): #this should be a list of dictionaries of fpr, tpr, roc_auc, and label
+def showmultiroccurve(params): #this should be a list of dictionaries of fpr, tpr, roc_auc, label, and color
     plt.figure()
     lw = 2
     for param in params:
-        plt.plot(param["fpr"], param["tpr"], color='darkorange',
+        plt.plot(param["fpr"], param["tpr"], color=param["color"],
              lw=lw, label='ROC curve - {0} (area = {1:0.2f})'.format(param["label"],param["roc_auc"]))
     plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
     plt.xlim([0.0, 1.0])
@@ -108,7 +108,7 @@ clf = tree.DecisionTreeClassifier()
 kf = StratifiedKFold(n_splits=10) #, shuffle=True, random_state=seed
 cross_val_roc = cross_val_score(clf, X=x_train, y=y_train, cv=kf, scoring='roc_auc')
 cross_val_mean_roc_score = np.mean(cross_val_roc)
-cross_val_mean_roc_score # = 0.7603877926552346
+cross_val_mean_roc_score
 #######
 
 #10-fold
@@ -149,7 +149,7 @@ for train_index, test_index in kf.split(x_train):
 avgfpr = array.array('f', [0.0, np.mean(fprs), 1])
 avgtpr = array.array('f', [0.0, np.mean(tprs), 1])
 avgroc = np.mean(rocs)
-avgroc # =  0.7427355886116913
-#avgroc here is generall a couple percentage points less than cross_val_mean_roc_score from above.... I'm not sure why this would be the case
+avgroc
+
 label = "Using KFolds"
 showroccurve(avgfpr, avgtpr, avgroc, label)
