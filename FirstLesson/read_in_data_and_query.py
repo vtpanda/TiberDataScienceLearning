@@ -4,14 +4,36 @@
 
 
 from pandas import Series, DataFrame
-
+import plotly.offline as pyo
+import plotly.graph_objs as go
 import pandas as pd
+import matplotlib.pyplot as plt
 
 #read data in
-df = pd.read_csv('Data/Titanic/train.csv')
+df = pd.read_csv('~/Documents/GitHub/TiberDataScienceLearning/Data/Titanic/train.csv')
 
 #show all data-ish
 df
+
+#show and display counts
+df['Age'].value_counts()
+#thing = df['Sex'].value_counts()
+#using plotly
+
+grouped = df.groupby('Sex')['PassengerId'].count()
+data = [go.Bar(
+    x=grouped.index,
+    y=grouped.values
+)]
+layout = go.Layout(
+    title='Counts by Sex'
+)
+fig = go.Figure(data=data, layout=layout)
+pyo.plot(fig, filename='sex.html')
+#using pyplot
+plt.bar(grouped.index, grouped.values)
+plt.title('Counts by Sex')
+plt.show()
 
 #show the Name column
 df['Name']
