@@ -18,8 +18,9 @@ df
 #show and display counts
 df['Age'].value_counts()
 #thing = df['Sex'].value_counts()
-#using plotly
 
+
+#using plotly
 grouped = df.groupby('Sex')['PassengerId'].count()
 data = [go.Bar(
     x=grouped.index,
@@ -30,6 +31,7 @@ layout = go.Layout(
 )
 fig = go.Figure(data=data, layout=layout)
 pyo.plot(fig, filename='sex.html')
+
 #using pyplot
 plt.bar(grouped.index, grouped.values)
 plt.title('Counts by Sex')
@@ -48,7 +50,7 @@ df[df['Survived'] == 1]
 df.ix[[2],]
 
 #show me the rows number 2 and 4 but only the Survived and Name columns;
-#i suspect that the [2,4] is positional rather than label;
+#presumably [2,4] is a label rather than positional, though i didn't test this out;
 #got a deprecation warning
 df.ix[[2,4],['Survived','Name']]
 
@@ -66,7 +68,7 @@ df.iloc[[2,4], ]
 #okay; this works
 df.loc[ : , ['Survived','Name']]
 df.iloc[ : , [1,3]]
-#this does work however
+#this also work
 df[['Survived','Name']]
 
 #more ways of doing things (though it's unclear why you would want to do this)
